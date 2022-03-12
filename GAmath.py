@@ -1,4 +1,9 @@
 
+"""
+(C) 2022: Magnus Stava <magnsta@stud.ntnu.no>
+First introduction to GA. Developed simple GA that guesses
+a word.  
+"""
 import numpy as np
 import random
 #Define a function
