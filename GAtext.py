@@ -20,7 +20,7 @@ words = ["Variables","Nice","Initial","Population",
 "Solutions","Hate","Untitled","History"]
 
 word = random.choice(words)
-
+#word = "ABCDEFGHIJKLMNOPQRSTYZ"
 """
 pop - Initilize population 
 iterations - Number of iterations. If no solution is found, repeat from 0
@@ -86,7 +86,7 @@ individuals - Combination of letters, all individuals makes up the population.
 """
 population = []
 for s in range(pop):
-    wordSize = random.randint(2,15) 
+    wordSize = random.randint(2,27) 
     individials = ""
     for i in range(wordSize):
         individials += random.choice(string.ascii_letters)
@@ -98,7 +98,18 @@ When found loop is broken and code terminated.
 """
 notFound = True
 msg = ""
+rounds = 0
 while notFound:
+    rounds +=1
+    if rounds >=2:
+        scores = (rankedPopulation[0][0])/10
+        maxScore = len(rankedPopulation[0][1][0])*4
+        accuracy = (scores/(maxScore))*100
+        print("\nIteration %s"%rounds+" complete")
+        print("Looking for: "+word)
+        print("Current best solution:")
+        print(rankedPopulation[0])
+        print("Accuracy %s"%accuracy+"%")
     for i in range(iterations):
         rankedPopulation = []
         for s in population: 
@@ -173,6 +184,9 @@ while notFound:
             break
 
 """Print the final word and generations used to find this word"""
-print("\n")
-print(f"=== Correct word found in {msg} ===")
-print(rankedPopulation[0])
+
+accuracy = 100
+print("\nIteration %s"%rounds+" complete")
+print("Looking for: "+word)
+print("Found      : %s"%rankedPopulation[0][1][0])
+print("Accuracy %s"%accuracy+"%")
