@@ -23,19 +23,19 @@ words = ["Variables","Nice","Initial","Population",
 ,"SOurhsKD","TeHSdnsoRUSjdS"]
 
 word = random.choice(words)
-#word = "TeHSdnsoRUSjdS"
+#word = "To be or not to be that is the question we have to ask (PS. Important). I will be home by dinner"
 """
 pop - Initilize population 
 iterations - Number of iterations. If no solution is found, repeat from 0
 elite - Number of solution to keep untouched
-mutateVariable - Decides how often a mutation occurs. 
+globalMutation - Decides how often a mutation occurs. Number between 0 and 100.  
 Changing the values affect the running time. 
-
 """
-pop = 100           
+
+pop = 200           
 iterations = 100        
 elite = 5
-
+mutationRate = 2  #
 
 def textfun(text):
     """Points are given by the following rules.
@@ -66,7 +66,6 @@ def textfun(text):
         score -=10
     return score
 
-
 def textFitness(text):
     """
     Fitness function. 
@@ -90,11 +89,11 @@ wordSize - Decides size of individuals
 individuals - Combination of letters, all individuals makes up the population. 
 """
 population = []
+wordSize = len(word)
 for s in range(pop):
-    wordSize = random.randint(2,22) 
     individials = ""
     for i in range(wordSize):
-        individials += random.choice(string.ascii_letters)
+        individials += random.choice(string.printable)
     population.append(((individials),"First generation"))
 
 """
@@ -104,6 +103,8 @@ When found loop is broken and code terminated.
 notFound = True
 msg = ""
 rounds = 0
+mut = 0
+bestScore = []
 while notFound:
 
     for i in range(iterations):
@@ -130,8 +131,8 @@ while notFound:
         Generate the new population based on the top 10 percent individuals
         Add the new generation in list newGen. 
         """      
-        top10Percent = int(pop/10)
-        bestsolutions = rankedPopulation[0:top10Percent]  
+        top25Percent = int(pop*0.25)
+        bestsolutions = rankedPopulation[0:top25Percent]  
         
         """
         matingPool - List of population without the fitness score. Used for mating.
@@ -154,16 +155,12 @@ while notFound:
         newIndividual   - Generated child from individual
         """
         for i in range(pop-elite):
-            mutate = random.randint(0,100)
             Individual = matingPool[random.randint(0,len(matingPool)-1)]    #Select a random element of the besYt performing individual.
             newIndividual = ""
             for j in range(len(Individual)):
                 mutate = random.randint(0,100)
-                if mutate > 80: 
-                    newIndividual += random.choice(matingPool[random.randint(0,len(matingPool)-1)])
-                    texts = "Heavy local mutation"
-                elif mutate < 5:
-                    newIndividual += random.choice(string.ascii_letters)
+                if mutate < mutationRate:
+                    newIndividual += random.choice(string.printable)
                     texts = "Heavy random mutation"
                 else:
                     newIndividual += Individual[j] 
@@ -178,6 +175,7 @@ while notFound:
         if(rankedPopulation[0][0]==900000):
             notFound = False
             break
+    bestScore.append(rankedPopulation[0][0])
     if rounds >= 0:
         scores = (rankedPopulation[0][0])/10
         maxScore = len(rankedPopulation[0][1][0])*4
@@ -187,7 +185,16 @@ while notFound:
         print("Current best solution:")
         print(rankedPopulation[0])
         print("Accuracy %s"%accuracy+"%")
+    if mut > 2:                                         #If no improvements for 2 iterations, decrease mutation rate. 
+        if bestScore[rounds] == bestScore[rounds-2]:
+            print("\nDecrease mutation rate to:")
+            globalMutation -= 1
+            print("%s"%globalMutation+"%")
+            mut = 0
+            if globalMutation < 1:
+                globalMutation = 1
     rounds +=1
+    mut += 1
 
 """Print the final word and generations used to find this word"""
 
