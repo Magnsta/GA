@@ -20,10 +20,10 @@ words = ["Variables","Nice","Initial","Population",
 "Solutions","Hate","Untitled","History"
 ,"Interdisciplinary","Inconsequential",
 "Hypothetically","Incomprehensibilities"
-,"SOurhsKD","TeHSdnsoRUSjdS"]
+,"SOurhsKD","TeHSdnsoRUSjdS","pneumonoultramicroscopicsilicovolcanoconiosis"]
 
 word = random.choice(words)
-#word = "To be or not to be that is the question we have to ask (PS. Important). I will be home by dinner"
+#word = "pneumonoultramicroscopicsilicovolcanoconiosis"
 """
 pop - Initilize population 
 iterations - Number of iterations. If no solution is found, repeat from 0
@@ -31,11 +31,13 @@ elite - Number of solution to keep untouched
 globalMutation - Decides how often a mutation occurs. Number between 0 and 100.  
 Changing the values affect the running time. 
 """
-
 pop = 200           
 iterations = 100        
 elite = 5
 mutationRate = 2  #
+
+"""How to generate the new population, Asexual one parent with mutation, randomCrossOver two parents and mutation"""
+Asexual = False
 
 def textfun(text):
     """Points are given by the following rules.
@@ -154,18 +156,39 @@ while notFound:
         individual      - Individual from mating pool
         newIndividual   - Generated child from individual
         """
-        for i in range(pop-elite):
-            Individual = matingPool[random.randint(0,len(matingPool)-1)]    #Select a random element of the besYt performing individual.
-            newIndividual = ""
-            for j in range(len(Individual)):
-                mutate = random.randint(0,100)
-                if mutate < mutationRate:
-                    newIndividual += random.choice(string.printable)
-                    texts = "Heavy random mutation"
-                else:
-                    newIndividual += Individual[j] 
-                    texts = "Not mutation"                   
-            newPopulation.append((newIndividual,texts))
+        if Asexual:
+            for i in range(pop-elite):
+                IndividualA = matingPool[random.randint(0,len(matingPool)-1)]    #Select a random element from the mating pool. Using Asexual mating    
+                newIndividual = ""
+                for j in range(len(IndividualA)):
+                    mutate = random.randint(0,100)
+                    if mutate < mutationRate:
+                        newIndividual += random.choice(string.printable)
+                        texts = "Heavy random mutation"
+                    elif mutate >51:
+                        newIndividual += IndividualA[j] 
+                        texts = "Not mutation"                   
+                    else:
+                        newIndividual += IndividualA[j] 
+                        texts = "Not mutation"                   
+                newPopulation.append((newIndividual,texts))
+        else:
+            for i in range(pop-elite):
+                IndividualA = matingPool[random.randint(0,len(matingPool)-1)]    #Select a random element from the mating pool. Using Asexual mating
+                IndividualB = matingPool[random.randint(0,len(matingPool)-1)]
+                newIndividual = ""
+                for j in range(len(IndividualA)):
+                    mutate = random.randint(0,100)
+                    if mutate < mutationRate:
+                        newIndividual += random.choice(string.printable)
+                        texts = "Heavy random mutation"
+                    elif mutate >51:
+                        newIndividual += IndividualB[j] 
+                        texts = "Not mutation"                   
+                    else:
+                        newIndividual += IndividualA[j] 
+                        texts = "Not mutation"                   
+                newPopulation.append((newIndividual,texts))
 
         """Assign the new population to the solutions list"""
         population = newPopulation  
@@ -188,11 +211,11 @@ while notFound:
     if mut > 2:                                         #If no improvements for 2 iterations, decrease mutation rate. 
         if bestScore[rounds] == bestScore[rounds-2]:
             print("\nDecrease mutation rate to:")
-            globalMutation -= 1
-            print("%s"%globalMutation+"%")
+            mutationRate -= 1
+            print("%s"%mutationRate+"%")
             mut = 0
-            if globalMutation < 1:
-                globalMutation = 1
+            if mutationRate < 1:
+                mutationRate = 1
     rounds +=1
     mut += 1
 
