@@ -17,10 +17,13 @@ words = ["Variables","Nice","Initial","Population",
 "Wrong","Length","Solver","Following",
 "Okey","Correct","Width","Function",
 "Love","Generator","Words","Python",
-"Solutions","Hate","Untitled","History"]
+"Solutions","Hate","Untitled","History"
+,"Interdisciplinary","Inconsequential",
+"Hypothetically","Incomprehensibilities"
+,"SOurhsKD","TeHSdnsoRUSjdS"]
 
 word = random.choice(words)
-#word = "ABCDEFGHIJKLMNOPQRSTYZ"
+#word = "TeHSdnsoRUSjdS"
 """
 pop - Initilize population 
 iterations - Number of iterations. If no solution is found, repeat from 0
@@ -29,19 +32,20 @@ mutateVariable - Decides how often a mutation occurs.
 Changing the values affect the running time. 
 
 """
-pop = 1000              
+pop = 100           
 iterations = 100        
 elite = 5
 
-"""Awardeds are given by the following order.
-Wrong length on word: -10 points
 
-Correct position and letter: 4 points
-Wrong position but correct letter: 1 point
-Neighbour position and correct letter: 1.5 point
-Wrong position and wrong letter: -2 points. 
-"""
 def textfun(text):
+    """Points are given by the following rules.
+    Wrong length on word: -10 points
+
+    Correct position and letter: 4 points
+    Wrong position but correct letter: 1 point
+    Neighbour position and correct letter: 1.5 point
+    Wrong position and wrong letter: -2 points. 
+    """
     score = 0.0
     if text[0] == word:
         return 90000
@@ -62,13 +66,14 @@ def textfun(text):
         score -=10
     return score
 
-"""
-Fitness function. 
-Take value from textfun() and multiply by 10. 
-Higher value --> Higher performing word. 
-If the word is matching set a artificial high value
-"""
+
 def textFitness(text):
+    """
+    Fitness function. 
+    Take value from textfun() and multiply by 10. 
+    Higher value --> Higher performing word. 
+    If the word is matching set a artificial high value
+    """
     ans = textfun(text)
     if ans == 900000:       
         return 900000
@@ -86,7 +91,7 @@ individuals - Combination of letters, all individuals makes up the population.
 """
 population = []
 for s in range(pop):
-    wordSize = random.randint(2,27) 
+    wordSize = random.randint(2,22) 
     individials = ""
     for i in range(wordSize):
         individials += random.choice(string.ascii_letters)
@@ -100,16 +105,7 @@ notFound = True
 msg = ""
 rounds = 0
 while notFound:
-    rounds +=1
-    if rounds >=2:
-        scores = (rankedPopulation[0][0])/10
-        maxScore = len(rankedPopulation[0][1][0])*4
-        accuracy = (scores/(maxScore))*100
-        print("\nIteration %s"%rounds+" complete")
-        print("Looking for: "+word)
-        print("Current best solution:")
-        print(rankedPopulation[0])
-        print("Accuracy %s"%accuracy+"%")
+
     for i in range(iterations):
         rankedPopulation = []
         for s in population: 
@@ -126,7 +122,8 @@ while notFound:
         """
         #print(f"=== Gen {i} best solutions ===")
         #print(rankedPopulation[0])
-        msg = (f"=== Gen {i}")                          #Used only for presenting which geenration solution was found
+        iter = i
+        msg = (f"Generation {i} ===")                          #Used only for presenting which geenration solution was found
 
         """
         Keep the elitesolutions unchanged. 
@@ -144,7 +141,7 @@ while notFound:
         newPopulation = [] 
         idx = 0
         for e in bestsolutions:
-            if idx <= 4:
+            if idx <= elite:
                 text = "Elite"
                 newPopulation.append((e[1][0],text))                
             matingPool.append(e[1][0])
@@ -175,18 +172,29 @@ while notFound:
 
         """Assign the new population to the solutions list"""
         population = newPopulation  
-        
         """
         If solution is found terminate
         """
         if(rankedPopulation[0][0]==900000):
             notFound = False
             break
+    if rounds >= 0:
+        scores = (rankedPopulation[0][0])/10
+        maxScore = len(rankedPopulation[0][1][0])*4
+        accuracy = (scores/(maxScore))*100
+        print("\nIteration %s"%rounds)
+        print("Looking for: "+word)
+        print("Current best solution:")
+        print(rankedPopulation[0])
+        print("Accuracy %s"%accuracy+"%")
+    rounds +=1
 
 """Print the final word and generations used to find this word"""
 
 accuracy = 100
-print("\nIteration %s"%rounds+" complete")
+totGen = iter+rounds*iterations
+print("\nComplete")
 print("Looking for: "+word)
 print("Found      : %s"%rankedPopulation[0][1][0])
+print("Generation : %s"%totGen)
 print("Accuracy %s"%accuracy+"%")
