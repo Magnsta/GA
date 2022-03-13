@@ -103,9 +103,9 @@ for s in range(pop):
 Continue searching for word until found. 
 When found loop is broken and code terminated. 
 """
-notFound = True
-msg = ""
-rounds = -1
+notFound = True                                 #If found, terminate program
+msg = ""                                        #Used only for presenting which geenration solution was found
+rounds = -1                                     #Keep track on how many complete iteration
 mut = 0
 bestScore = []
 while notFound:
@@ -210,12 +210,9 @@ while notFound:
         print("Current best solution:")
         print(rankedPopulation[0])
         print("Accuracy %s"%accuracy+"%")
-    if mut > 2:                                         #If no improvements for 2 iterations, decrease mutation rate. 
+    if mut == 2:                                         #If no improvements for 2 iterations, decrease mutation rate. 
         if bestScore[rounds] == bestScore[rounds-2]:
-            print("\nDecrease mutation rate to:")
             mutationRate -= 1
-            print("%s"%mutationRate+"%")
-            mut = 0
             if mutationRate < 1:
                 mutationRate = 1
     rounds +=1
