@@ -23,7 +23,8 @@ words = ["Variables","Nice","Initial","Population",
 ,"SOurhsKD","TeHSdnsoRUSjdS","pneumonoultramicroscopicsilicovolcanoconiosis"]
 
 word = random.choice(words)
-#word = "pneumonoultramicroscopicsilicovolcanoconiosis"
+#word = "The Python installers for the Windows platform usually include the entire"
+
 """
 pop - Initilize population 
 iterations - Number of iterations. If no solution is found, repeat from 0
@@ -36,7 +37,7 @@ iterations = 100
 elite = 5
 mutationRate = 2  #
 
-"""How to generate the new population, Asexual one parent with mutation, randomCrossOver two parents and mutation"""
+"""If true, generate new population Asexually, if false use random crossover selection"""
 Asexual = False
 
 def textfun(text):
@@ -57,9 +58,9 @@ def textfun(text):
                 score += 4
             elif i != len(text[0])-1:
                 if text[0][i+1] == word[i]:
-                    score +=1.5
+                    score +=1.75
             elif text[0][i-1] == word[i]:
-                score +=1.5
+                score +=1.75
             elif text[0][i] in word:
                 score += 1
             else:
@@ -104,11 +105,11 @@ When found loop is broken and code terminated.
 """
 notFound = True
 msg = ""
-rounds = 0
+rounds = -1
 mut = 0
 bestScore = []
 while notFound:
-
+    
     for i in range(iterations):
         rankedPopulation = []
         for s in population: 
@@ -123,8 +124,8 @@ while notFound:
         """
         Uncomment to get the best current solution for each iteration
         """
-        #print(f"=== Gen {i} best solutions ===")
-        #print(rankedPopulation[0])
+        print(f"=== Gen {i} best solutions ===")
+        print(rankedPopulation[0])
         iter = i
         msg = (f"Generation {i} ===")                          #Used only for presenting which geenration solution was found
 
@@ -156,6 +157,7 @@ while notFound:
         individual      - Individual from mating pool
         newIndividual   - Generated child from individual
         """
+        plussminus = [-1,1]
         if Asexual:
             for i in range(pop-elite):
                 IndividualA = matingPool[random.randint(0,len(matingPool)-1)]    #Select a random element from the mating pool. Using Asexual mating    
@@ -174,8 +176,8 @@ while notFound:
                 newPopulation.append((newIndividual,texts))
         else:
             for i in range(pop-elite):
-                IndividualA = matingPool[random.randint(0,len(matingPool)-1)]    #Select a random element from the mating pool. Using Asexual mating
-                IndividualB = matingPool[random.randint(0,len(matingPool)-1)]
+                IndividualA = matingPool[random.randint(0,len(matingPool)-1)]    #Select a random parent from the mating pool. Using Asexual mating
+                IndividualB = matingPool[random.randint(0,len(matingPool)-1)]    #Select another random parent from the mating pool. 
                 newIndividual = ""
                 for j in range(len(IndividualA)):
                     mutate = random.randint(0,100)
@@ -199,11 +201,11 @@ while notFound:
             notFound = False
             break
     bestScore.append(rankedPopulation[0][0])
-    if rounds >= 0:
+    if rounds >= -1:
         scores = (rankedPopulation[0][0])/10
         maxScore = len(rankedPopulation[0][1][0])*4
         accuracy = (scores/(maxScore))*100
-        print("\nIteration %s"%rounds)
+        print("\nIteration %s"%(rounds+1))
         print("Looking for: "+word)
         print("Current best solution:")
         print(rankedPopulation[0])
@@ -222,7 +224,7 @@ while notFound:
 """Print the final word and generations used to find this word"""
 
 accuracy = 100
-totGen = iter+rounds*iterations
+totGen = iter+(rounds)*iterations
 print("\nComplete")
 print("Looking for: "+word)
 print("Found      : %s"%rankedPopulation[0][1][0])
